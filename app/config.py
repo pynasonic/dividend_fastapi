@@ -12,6 +12,9 @@ class _Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = None
     SERPERDEV_API_KEY: Optional[str] = None
     TAVILY_API_KEY: str = "ff"
+    ALPHAVANTAGE_API_KEY:  str = "ff"
+    EOD_API_KEY:  str = "ff"
+    FINNHUB_API_KEY:  str = "ff"
 
     # Database
     DIV_ASYNC: str = "postgresql+asyncpg://username:pwd@local/icedb"
