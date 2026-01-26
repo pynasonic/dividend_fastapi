@@ -80,13 +80,11 @@ def get_alpha_stock(symbol: str):
     return response.json()
 
 
-
 @divRou.get("/eod_stock/{symbol}")
 def get_eod_stock(symbol: str):
     url = f"https://eodhistoricaldata.com/api/eod/{symbol}.US?api_token={EOD_API_KEY}&fmt=json"
     response = requests.get(url)
     return response.json()
-
 
 
 @divRou.get("/finnhub_quote/{symbol}")
@@ -96,3 +94,76 @@ def get_finnhub_quote(symbol: str):
     return response.json()
 
 
+
+@divRou.get("/alpha_stock2/{symbol}")
+def get_alpha_stock2(symbol: str):
+    price_url = (
+        "https://www.alphavantage.co/query"
+        f"?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={ALPHA_API_KEY}"
+    )
+    overview_url = (
+        "https://www.alphavantage.co/query"
+        f"?function=OVERVIEW&symbol={symbol}&apikey={ALPHA_API_KEY}"
+    )
+
+    price_res = requests.get(price_url).json()
+    overview_res = requests.get(overview_url).json()
+
+    ts = price_res.get("Time Series (Daily)", {})
+    latest_date = max(ts.keys()) if ts else None
+    latest_price = ts[latest_date]["4. close"] if latest_date else None
+
+    return {
+        "provider": "alpha_vantage",
+        "symbol": symbol,
+        "latest_price": float(latest_price) if latest_price else None,
+        "market_cap": int(overview_res.get("MarketCapitalization", 0)) or None
+    }
+
+
+
+@divRou.get("/eod_stock2/{symbol}")
+def get_eod_stock2(symbol: str):
+    eod_url = (
+        f"https://eodhistoricaldata.com/api/eod/{symbol}.US"
+        f"?api_token={EOD_API_KEY}&fmt=json"
+    )
+    fundamentals_url = (
+        f"https://eodhistoricaldata.com/api/fundamentals/{symbol}.US"
+        f"?api_token={EOD_API_KEY}"
+    )
+
+    eod_data = requests.get(eod_url).json()
+    fundamentals = requests.get(fundamentals_url).json()
+
+    latest = eod_data[-1] if eod_data else {}
+
+    return {
+        "provider": "eod",
+        "symbol": symbol,
+        "latest_price": latest.get("close"),
+        "market_cap": fundamentals.get("General", {}).get("MarketCapitalization")
+    }
+
+
+
+@divRou.get("/finnhub_stock2/{symbol}")
+def get_finnhub_stock2(symbol: str):
+    quote_url = (
+        f"https://finnhub.io/api/v1/quote"
+        f"?symbol={symbol}&token={FINNHUB_API_KEY}"
+    )
+    profile_url = (
+        f"https://finnhub.io/api/v1/stock/profile2"
+        f"?symbol={symbol}&token={FINNHUB_API_KEY}"
+    )
+
+    quote = requests.get(quote_url).json()
+    profile = requests.get(profile_url).json()
+
+    return {
+        "provider": "finnhub",
+        "symbol": symbol,
+        "latest_price": quote.get("c"),
+        "market_cap": profile.get("marketCapitalization")
+    }
