@@ -122,29 +122,40 @@ def get_alpha_stock2(symbol: str):
 
 
 
+def safe_get_json(url: str):
+    res = requests.get(url, timeout=10)
+    if res.status_code != 200 or not res.text.strip():
+        return None
+    try:
+        return res.json()
+    except ValueError:
+        return None
+
+
 @divRou.get("/eod_stock2/{symbol}")
 def get_eod_stock2(symbol: str):
     eod_url = (
         f"https://eodhistoricaldata.com/api/eod/{symbol}.US"
         f"?api_token={EOD_API_KEY}&fmt=json"
     )
+
     fundamentals_url = (
         f"https://eodhistoricaldata.com/api/fundamentals/{symbol}.US"
         f"?api_token={EOD_API_KEY}"
     )
 
-    eod_data = requests.get(eod_url).json()
-    fundamentals = requests.get(fundamentals_url).json()
+    eod_data = safe_get_json(eod_url) or []
+    fundamentals = safe_get_json(fundamentals_url) or {}
 
-    latest = eod_data[-1] if eod_data else {}
+    latest_price = eod_data[-1]["close"] if eod_data else None
+    market_cap = fundamentals.get("General", {}).get("MarketCapitalization")
 
     return {
         "provider": "eod",
         "symbol": symbol,
-        "latest_price": latest.get("close"),
-        "market_cap": fundamentals.get("General", {}).get("MarketCapitalization")
+        "latest_price": latest_price,
+        "market_cap": market_cap
     }
-
 
 
 @divRou.get("/finnhub_stock2/{symbol}")
