@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import RedirectResponse
-# from app.api.r_report import reportRou
 
-from app.api.r_div import divRou
+from app.api.r_div_inject import injRou
+from app.api.r_div_inject import injRou
+from app.api.r_reserve import reserveRou
 
 rou = APIRouter()
 
@@ -11,4 +12,9 @@ def rouGet():
     return RedirectResponse(url="https://ainvoaice.com")
 
 
-rou.include_router(divRou, prefix="/div", tags=["Dividends"])
+rou.include_router(injRou, prefix="/div2pg", tags=["From Nasdaq to Postgres"])
+
+
+
+
+rou.include_router(reserveRou, prefix="/reserve", tags=["Reserve"])

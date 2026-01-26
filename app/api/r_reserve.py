@@ -15,10 +15,10 @@ EOD_API_KEY = settings.EOD_API_KEY
 FINNHUB_API_KEY = settings.FINNHUB_API_KEY
 
 
-divRou = APIRouter()
+reserveRou = APIRouter()
 
-@divRou.post("/grab")
-def grab_dividends(date: str = Query(..., example="2026-01-30")):
+@reserveRou.post("/grab")
+def grab_dividends(date: str = Query(..., examples="2026-01-30")):
     csv_path = grab_dividends_to_csv(target_date=date)
 
     return {
@@ -27,9 +27,9 @@ def grab_dividends(date: str = Query(..., example="2026-01-30")):
     }
 
 
-@divRou.post("/load")
+@reserveRou.post("/load")
 async def load_dividends(
-    filename: str = Query(..., example="dividends_2026-01-30.csv"),
+    filename: str = Query(..., examples="dividends_2026-01-30.csv"),
     db: AsyncSession = Depends(get_db),
 ):
     count = await DividendCsvLoader.load_csv(db, filename)
@@ -73,21 +73,21 @@ async def load_dividends(
 
 
 
-@divRou.get("/alpha_stock/{symbol}")
+@reserveRou.get("/alpha_stock/{symbol}")
 def get_alpha_stock(symbol: str):
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={ALPHA_API_KEY}"
     response = requests.get(url)
     return response.json()
 
 
-@divRou.get("/eod_stock/{symbol}")
+@reserveRou.get("/eod_stock/{symbol}")
 def get_eod_stock(symbol: str):
     url = f"https://eodhistoricaldata.com/api/eod/{symbol}.US?api_token={EOD_API_KEY}&fmt=json"
     response = requests.get(url)
     return response.json()
 
 
-@divRou.get("/finnhub_quote/{symbol}")
+@reserveRou.get("/finnhub_quote/{symbol}")
 def get_finnhub_quote(symbol: str):
     url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={FINNHUB_API_KEY}"
     response = requests.get(url)
@@ -95,7 +95,7 @@ def get_finnhub_quote(symbol: str):
 
 
 
-@divRou.get("/alpha_stock2/{symbol}")
+@reserveRou.get("/alpha_stock2/{symbol}")
 def get_alpha_stock2(symbol: str):
     price_url = (
         "https://www.alphavantage.co/query"
@@ -132,7 +132,7 @@ def safe_get_json(url: str):
         return None
 
 
-@divRou.get("/eod_stock2/{symbol}")
+@reserveRou.get("/eod_stock2/{symbol}")
 def get_eod_stock2(symbol: str):
     eod_url = (
         f"https://eodhistoricaldata.com/api/eod/{symbol}.US"
@@ -158,7 +158,7 @@ def get_eod_stock2(symbol: str):
     }
 
 
-@divRou.get("/finnhub_stock2/{symbol}")
+@reserveRou.get("/finnhub_stock2/{symbol}")
 def get_finnhub_stock2(symbol: str):
     quote_url = (
         f"https://finnhub.io/api/v1/quote"
