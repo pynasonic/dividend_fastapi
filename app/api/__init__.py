@@ -11,4 +11,4 @@ def rouGet():
     return RedirectResponse(url="https://ainvoaice.com")
 
 
-rou.include_router(divRou, prefix="/wages", tags=["Wages"])
+rou.include_router(divRou, prefix="/div", tags=["Dividends"])

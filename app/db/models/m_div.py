@@ -1,12 +1,13 @@
 from datetime import date
 
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Date, Numeric
+from sqlalchemy import Index, String, Date, Numeric
 
 from app.db.models.m_base import Base, BaseMixin
 
 class Div(Base, BaseMixin):
     __tablename__ = "dividends"
+    __table_args__ = (Index("ix_dividends_symbol_exdate","symbol","dividend_ex_date",unique=True,),)
     
     company_name: Mapped[str] = mapped_column(String(255), nullable=True, index=True)
     symbol:       Mapped[str] = mapped_column(String(50), nullable=True, index=True)
