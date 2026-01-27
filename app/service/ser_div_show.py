@@ -8,44 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, update
 
 
-class ReportService:
+class DivService:
+
 
     @staticmethod
-    async def upload_csv(
-        db: AsyncSession,
-        file_bytes: bytes,
-    ) -> None:
-        text = file_bytes.decode("utf-8")
-        reader = csv.DictReader(io.StringIO(text))
-
-        reports: list[Report] = []
-
-        for row in reader:
-            content = f"""
-                        Lead owner is {row['Lead Owner']}.
-                        Source is {row['Source']}.
-                        Deal stage is {row['Deal Stage']}.
-                        Account ID is {row['Account Id']}.
-                        Contact name is {row['First Name']} {row['Last Name']}.
-                        Company name is {row['Company']}.
-                    """.strip()
-            report = Report(
-                mdate=datetime.strptime(row["Date"], "%m/%d/%Y").date(),
-                lead_owner=row["Lead Owner"],
-                source=row["Source"],
-                deal_stage=row["Deal Stage"],
-                account_id=row["Account Id"],
-                first_name=row["First Name"],
-                last_name=row["Last Name"],
-                company=row["Company"],
-                content=content,
-            )
-            reports.append(report)
-
-        await ReportRepository.bulk_insert(db, reports)
-
-    @staticmethod
-    async def list_reports(
+    async def list_divs(
         db: AsyncSession,
     ):
         return await ReportRepository.list_reports(db)
@@ -81,58 +48,6 @@ class ReportService:
             "total_pages": (total + page_size - 1) // page_size,
         }
 
-    @staticmethod
-    async def update_partial(
-        db: AsyncSession,
-        report_id: str,
-        payload: dict,
-    ):
-        # allow only real columns (security)
-        allowed_fields = {
-            "first_name",
-            "last_name",
-            "company",
-            "lead_owner",
-            "source",
-            "deal_stage",
-            "account_id",
-        }
-
-        update_data = {k: v for k, v in payload.items() if k in allowed_fields}
-
-        if not update_data:
-            return {"updated": False, "reason": "no valid fields"}
-
-        stmt = (
-            update(Report)
-            .where(Report.id == report_id)
-            .values(**update_data)
-            .returning(Report)
-        )
-
-        result = await db.execute(stmt)
-        await db.commit()
-
-        updated = result.scalar_one_or_none()
-
-        if not updated:
-            return {"updated": False, "reason": "not found"}
-
-        return {
-            "updated": True,
-            "id": updated.id,
-            "fields": update_data,
-        }
-
-    @staticmethod
-    async def create(db: AsyncSession, payload: dict):
-        if payload.get("mdate"):
-            payload["mdate"] = datetime.fromisoformat(payload["mdate"])
-        report = Report(**payload)
-        db.add(report)
-        await db.commit()
-        await db.refresh(report)
-        return report
 
     @staticmethod
     async def list_filtered_reports(

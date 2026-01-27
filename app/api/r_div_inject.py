@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.db_async import get_db
 
-from app.service.ser_div import refresh_finnhub_market_data
-from app.service.ser_grab_dividends import grab_dividends_to_csv
+from app.service.ser_dividend_finnhub import refresh_finnhub_market_data
+from app.service.ser_dividend_grab_nasdaq import grab_dividends_to_csv
 from app.service.ser_dividend_load import DividendCsvLoader
 
 

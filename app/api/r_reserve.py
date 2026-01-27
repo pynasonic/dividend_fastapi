@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Path, UploadFile, File, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.db_async import get_db
 
-from app.service.ser_grab_dividends import grab_dividends_to_csv
+from app.service.ser_dividend_grab_nasdaq import grab_dividends_to_csv
 from app.service.ser_dividend_load import DividendCsvLoader
 
 from app.config import get_settings_singleton
