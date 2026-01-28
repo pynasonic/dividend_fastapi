@@ -2,7 +2,7 @@
 from decimal import Decimal
 from app.db.db_sync import get_db_sync_contextmanager
 from app.providers.finnhub_client import FinnhubClient
-from app.db.repo.repo_div import get_by_symbol, update_market_data
+from app.db.repo.repo_div_inject import get_by_symbol, update_market_data
 
 def refresh_finnhub_market_data(symbol: str) -> dict:
     client = FinnhubClient()

@@ -13,7 +13,7 @@ injRou = APIRouter()
 
 
 @injRou.post("/grab2csv")
-def grab_dividends(date: str = Query(..., examples="2026-01-30")):
+def grab_dividends(date: str = Query(..., example="2026-01-30")):
     csv_path = grab_dividends_to_csv(target_date=date)
     return {
         "status": "grab done",
@@ -23,7 +23,7 @@ def grab_dividends(date: str = Query(..., examples="2026-01-30")):
 
 @injRou.post("/load2pg")
 async def load_dividends(
-    filename: str = Query(..., examples="dividends_2026-01-30.csv"),
+    filename: str = Query(..., example="dividends_2026-01-30.csv"),
     db: AsyncSession = Depends(get_db),
 ):
     count = await DividendCsvLoader.load_csv(db, filename)

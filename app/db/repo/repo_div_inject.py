@@ -28,19 +28,3 @@ def update_market_data(
 
 
 
-class ReportRepository:
-
-    @staticmethod
-    async def bulk_insert(
-        db: AsyncSession,
-        reports: list[Report],
-    ) -> None:
-        db.add_all(reports)
-        await db.commit()
-
-    @staticmethod
-    async def list_reports(
-        db: AsyncSession,
-    ) -> list[Report]:
-        result = await db.execute(select(Report))
-        return result.scalars().all()   # type: ignore[return-value]
