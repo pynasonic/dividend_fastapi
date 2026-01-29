@@ -6,7 +6,7 @@ from app.providers.finnhub_client import FinnhubClient
 from app.db.repo.repo_div_inject import get_by_symbol, update_market_data, get_all
 
 # Configurable limits
-FINNHUB_RATE_LIMIT_PER_MIN = 20  # free tier approx 60 calls/minute
+FINNHUB_RATE_LIMIT_PER_MIN = 29  # free tier approx 60 calls/minute
 
 def refresh_finnhub_market_data(symbol: str) -> dict:
     client = FinnhubClient()
@@ -49,6 +49,7 @@ def refresh_all_finnhub_market_data() -> dict:
         # rate limit
         elapsed = time.time() - minute_start
         if api_calls >= FINNHUB_RATE_LIMIT_PER_MIN:
+            print(f"Rate limit reached, sleeping for {60 - elapsed:.2f} seconds")
             if elapsed < 60:
                 time.sleep(60 - elapsed)
             api_calls = 0

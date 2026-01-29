@@ -52,3 +52,15 @@ def update_all_finnhub():
 
     except ValueError as e:
         raise HTTPException(status_code=502, detail=str(e))
+
+
+from fastapi import BackgroundTasks
+
+@injRou.post("/update-all-finnhub-background")
+def update_all_finnhub(background_tasks: BackgroundTasks):
+    background_tasks.add_task(refresh_all_finnhub_market_data)
+
+    return {
+        "status": "started",
+        "message": "Finnhub refresh job started in background"
+    }
