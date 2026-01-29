@@ -1,7 +1,11 @@
 from datetime import date
+import uuid
+from typing import Optional, Dict, Any, List, TYPE_CHECKING
 
+
+from pgvector import Vector
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Index, String, Date, Numeric
+from sqlalchemy import Column, ForeignKey, Index, String, Integer, Date, Numeric
 
 from app.db.models.m_base import Base, BaseMixin
 
@@ -24,4 +28,35 @@ class Div(Base, BaseMixin):
     yield_percent: Mapped[float] = mapped_column(Numeric(5, 2),nullable=True,)
     market_cap: Mapped[float] = mapped_column(Numeric(20, 2),nullable=True,)
 
-    
+
+class DivChunk(Base, BaseMixin):
+    __tablename__ = "dividend_chunks"
+
+    div_id: Mapped[uuid.UUID] = mapped_column(       
+        nullable=False,
+        index=True,
+    )
+
+    chunk_index: Mapped[int] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    content: Mapped[str] = mapped_column(
+        String,
+        nullable=True,
+    )
+
+    embedding: Mapped[Optional[List[float]]] = mapped_column(
+        Vector(384),
+        nullable=True,
+    )
+
+    __table_args__ = (
+        Index(
+            "ix_dividend_chunks_div_chunk",
+            "div_id",
+            "chunk_index",
+            unique=True,
+        ),
+    )
