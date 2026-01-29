@@ -28,3 +28,5 @@ def update_market_data(
 
 
 
+def get_all(db: Session) -> list[Div]:
+    return db.query(Div).all()
