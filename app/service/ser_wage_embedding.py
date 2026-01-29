@@ -1,7 +1,7 @@
 # app/service/ser_wage.py
 from typing import List, Dict
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.repo.repo_wage_embedding import WageEmbeddingRepository
+from app.db.repo.repo_div_embedding import DivEmbeddingRepository
 
 class WageEmbeddingService:
     @staticmethod
@@ -9,7 +9,7 @@ class WageEmbeddingService:
         db: AsyncSession,
         embed_fn,  # callable(text) -> list[float]
     ) -> int:
-        chunks = await WageEmbeddingRepository.build_chunks(db)
+        chunks = await DivEmbeddingRepository.build_chunks(db)
 
         embeddings: List[Dict] = []
         for c in chunks:
@@ -23,7 +23,7 @@ class WageEmbeddingService:
                 }
             )
 
-        await WageEmbeddingRepository.bulk_insert_embeddings(db, embeddings)
+        await DivEmbeddingRepository.bulk_insert_embeddings(db, embeddings)
         return len(embeddings)
 
 
@@ -32,12 +32,12 @@ class WageEmbeddingService:
         db: AsyncSession,
         embed_fn,
     ) -> int:
-        rows = await WageEmbeddingRepository.get_all_unembedded(db)
+        rows = await DivEmbeddingRepository.get_all_unembedded(db)
 
         for r in rows:
             text = r.chunk_en  # or combine EN + FR if you want
             emb = await embed_fn(text)
-            await WageEmbeddingRepository.update_embedding(db, r.id, emb)
+            await DivEmbeddingRepository.update_embedding(db, r.id, emb)
 
         await db.commit()
         return len(rows)
