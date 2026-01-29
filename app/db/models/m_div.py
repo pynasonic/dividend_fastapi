@@ -2,8 +2,7 @@ from datetime import date
 import uuid
 from typing import Optional, Dict, Any, List, TYPE_CHECKING
 
-
-from pgvector import Vector
+from pgvector.sqlalchemy import Vector
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Column, ForeignKey, Index, String, Integer, Date, Numeric
 
@@ -32,10 +31,7 @@ class Div(Base, BaseMixin):
 class DivChunk(Base, BaseMixin):
     __tablename__ = "dividend_chunks"
 
-    div_id: Mapped[uuid.UUID] = mapped_column(       
-        nullable=False,
-        index=True,
-    )
+    div_id: Mapped[uuid.UUID] = mapped_column(nullable=True,)
 
     chunk_index: Mapped[int] = mapped_column(
         Integer,
