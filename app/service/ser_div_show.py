@@ -16,6 +16,13 @@ class DivService:
     ):
         return await DivRepository.list_divs(db)
 
+
+    @staticmethod
+    async def list_divs_emb(
+        db: AsyncSession,
+    ):
+        return await DivRepository.list_divs_emb(db)
+
     # @staticmethod
     # async def reports_pagination(
     #     db: AsyncSession,

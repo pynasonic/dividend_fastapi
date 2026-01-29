@@ -57,7 +57,7 @@ def update_all_finnhub():
 from fastapi import BackgroundTasks
 
 @injRou.post("/update-all-finnhub-background")
-def update_all_finnhub(background_tasks: BackgroundTasks):
+def update_all_finnhub_bg(background_tasks: BackgroundTasks):
     background_tasks.add_task(refresh_all_finnhub_market_data)
 
     return {

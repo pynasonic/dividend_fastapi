@@ -12,6 +12,10 @@ async def list_divs(db: AsyncSession = Depends(get_db),):
     return await DivService.list_divs(db)
 
 
+@divRou.get("/emb")
+async def list_divs_emb(db: AsyncSession = Depends(get_db),):
+    return await DivService.list_divs_emb(db)
+
 
 # @divRou.get("/pagination")
 # async def list_reports(
