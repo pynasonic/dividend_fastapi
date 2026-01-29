@@ -19,8 +19,8 @@ def update_market_data(
         row.latest_price = latest_price
         row.market_cap = market_cap
 
-        if row.dividend_rate and latest_price > 0:
-            row.yield_percent = (Decimal(row.dividend_rate) / latest_price * Decimal("100"))
+        if row.indicated_annual_dividend and latest_price > 0:
+            row.yield_percent = (Decimal(row.indicated_annual_dividend) / latest_price * Decimal("100"))
         else:
             row.yield_percent = None
         updated += 1
