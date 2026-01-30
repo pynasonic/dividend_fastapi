@@ -44,7 +44,7 @@ class DivChunk(Base, BaseMixin):
     )
 
     embedding: Mapped[Optional[List[float]]] = mapped_column(
-        Vector(384),
+        Vector(1536),
         nullable=True,
     )
 

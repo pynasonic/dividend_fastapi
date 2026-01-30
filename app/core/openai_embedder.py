@@ -14,7 +14,7 @@ async def embed_fn(text: str) -> List[float]:
     response = await client.embeddings.create(
         model=EMBED_MODEL,
         input=text,
-        dimensions=384,  # <-- enforce 384-dim vector
+        dimensions=1536,  # <-- enforce 384-dim vector
     )
 
     return response.data[0].embedding
