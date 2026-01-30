@@ -21,5 +21,5 @@ async def rebuild_dividend_chunks(
 async def embed_all_wages(
     db: AsyncSession = Depends(get_db),
 ):
-    count = EmbeddingService.embed_all_dummy(db)
+    count = await  EmbeddingService.embed_all_dummy(db)
     return {"embedded": count}

@@ -34,9 +34,7 @@ class DivEmbeddingRepository:
 
     @staticmethod
     async def get_all_unembedded(db: AsyncSession):
-        stmt = select(DivChunk).where(
-            DivChunk.embedding == [0.0] * 384
-        )
+        stmt = select(DivChunk)
         stmt = stmt.limit(500)  # process in batches of 100
         res = await db.execute(stmt)
         return res.scalars().all()
@@ -47,6 +45,6 @@ class DivEmbeddingRepository:
         row_id,
         embedding: list[float],
     ):
-        row = await db.get(CanadaWageEmbedding, row_id)
+        row = await db.get(DivChunk, row_id)
         row.embedding = embedding    # type: ignore
         db.add(row)
