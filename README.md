@@ -1,3 +1,32 @@
-Any upstream integration that is likely to break or drift must terminate in an inspectable, replayable artifact before touching the database.
+# dividend_fastapi
 
-CSV is simply the cheapest artifact that satisfies this.
+A project created with FastAPI CLI.
+
+## Quick Start
+
+### Start the development server
+
+```bash
+uv run fastapi dev
+```
+
+Visit http://localhost:8000
+
+### Deploy to FastAPI Cloud
+
+> FastAPI Cloud is currently in private beta. Join the waitlist at https://fastapicloud.com
+
+```bash
+uv run fastapi login
+uv run fastapi deploy
+```
+
+## Project Structure
+
+- `main.py` - Your FastAPI application
+- `pyproject.toml` - Project dependencies
+
+## Learn More
+
+- [FastAPI Documentation](https://fastapi.tiangolo.com)
+- [FastAPI Cloud](https://fastapicloud.com)
